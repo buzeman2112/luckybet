@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>LuckyBet Ethiopia – Sports & Casino</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#06080f;--bg2:#0b0f1a;--bg3:#0f1525;--card:#111827;--border:#1a2540;
+  --gold:#f5a623;--gold2:#ffd166;--green:#00e676;--red:#ff3d57;
+  --blue:#2979ff;--cyan:#00e5ff;--purple:#7c3aed;
+  --text:#e8edf5;--muted:#5a6a8a;--accent:#141f35;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* ── NAV ── */
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:58px;background:var(--bg2);border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100}
+.logo{font-family:'Exo 2',sans-serif;font-weight:900;font-size:24px;letter-spacing:1px;background:linear-gradient(90deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo em{font-style:normal;-webkit-text-fill-color:var(--cyan)}
+.nav-center{display:flex;gap:4px}
+.nav-btn{padding:7px 14px;border-radius:7px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;cursor:pointer;color:var(--muted);background:none;border:none;transition:all .2s}
+.nav-btn:hover,.nav-btn.active{color:var(--gold);background:var(--accent)}
+.nav-right{display:flex;align-items:center;gap:8px}
+.wallet-chip{display:flex;align-items:center;gap:6px;background:var(--accent);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700}
+.wallet-chip .bal{color:var(--green);font-family:'Exo 2',sans-serif;font-size:16px}
+.btn{padding:8px 18px;border-radius:8px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;cursor:pointer;border:none;transition:all .2s}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#d4891a);color:#000}
+.btn-gold:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn-green{background:var(--green);color:#000}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ── TICKER ── */
+.ticker{background:linear-gradient(90deg,#0a1520,#0d1e35,#0a1520);border-bottom:1px solid var(--border);padding:5px 0;overflow:hidden}
+.ticker-track{display:flex;animation:tick 50s linear infinite;white-space:nowrap}
+.tick-item{display:inline-flex;align-items:center;gap:8px;padding:0 20px;font-size:12px;font-weight:600;border-right:1px solid var(--border)}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 1s infinite}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ── PAGES ── */
+.page{display:none}.page.active{display:block}
+
+/* ── HOME ── */
+.home-layout{display:grid;grid-template-columns:210px 1fr 290px;min-height:calc(100vh - 90px)}
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:12px 0;overflow-y:auto;max-height:calc(100vh - 90px)}
+.sb-title{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;padding:10px 14px 6px}
+.sb-item{display:flex;align-items:center;gap:9px;padding:9px 14px;font-size:14px;font-weight:600;cursor:pointer;border-left:3px solid transparent;transition:all .15s}
+.sb-item:hover{background:var(--accent);color:var(--text)}
+.sb-item.active{background:var(--accent);border-left-color:var(--gold);color:var(--gold)}
+.sb-badge{margin-left:auto;background:var(--blue);color:#fff;font-size:10px;font-weight:800;padding:2px 6px;border-radius:10px}
+.sb-live{margin-left:auto;background:var(--green);color:#000;font-size:10px;font-weight:800;padding:2px 6px;border-radius:10px}
+.main-content{padding:16px;overflow-y:auto;max-height:calc(100vh - 90px)}
+
+/* ── HERO ── */
+.hero{border-radius:12px;background:linear-gradient(135deg,#0a1628,#0d2040,#091428);border:1px solid var(--border);padding:24px 28px;margin-bottom:16px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(245,166,35,.1),transparent 60%)}
+.hero-tag{display:inline-block;background:var(--gold);color:#000;font-family:'Exo 2',sans-serif;font-size:10px;font-weight:800;letter-spacing:2px;padding:3px 10px;border-radius:4px;margin-bottom:8px}
+.hero-title{font-family:'Exo 2',sans-serif;font-size:34px;font-weight:900;line-height:1;margin-bottom:6px}
+.hero-title span{color:var(--gold)}
+.hero-sub{color:var(--muted);font-size:14px;margin-bottom:16px}
+.hero-actions{display:flex;gap:8px}
+.hero-floats{position:absolute;right:28px;top:50%;transform:translateY(-50%);display:flex;gap:16px}
+.hf{text-align:center}
+.hf-val{font-family:'Exo 2',sans-serif;font-size:26px;font-weight:900;color:var(--gold)}
+.hf-lbl{font-size:11px;color:var(--muted)}
+
+/* ── GAMES GRID ── */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.section-title{font-family:'Exo 2',sans-serif;font-size:17px;font-weight:800}
+.section-title::before{content:'';display:inline-block;width:3px;height:16px;background:var(--gold);border-radius:2px;margin-right:8px;vertical-align:middle}
+.see-all{font-size:12px;color:var(--muted);cursor:pointer}
+.see-all:hover{color:var(--gold)}
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:20px}
+.game-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 10px;cursor:pointer;transition:all .2s;text-align:center;position:relative;overflow:hidden}
+.game-card::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 110%,rgba(245,166,35,.1),transparent 70%);opacity:0;transition:opacity .2s}
+.game-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.game-card:hover::after{opacity:1}
+.game-icon{font-size:38px;margin-bottom:8px}
+.game-name{font-family:'Exo 2',sans-serif;font-size:14px;font-weight:700;margin-bottom:3px}
+.game-desc{font-size:11px;color:var(--muted)}
+.game-hot{position:absolute;top:8px;right:8px;background:var(--red);color:#fff;font-size:9px;font-weight:800;padding:2px 5px;border-radius:3px}
+.game-new{position:absolute;top:8px;right:8px;background:var(--green);color:#000;font-size:9px;font-weight:800;padding:2px 5px;border-radius:3px}
+
+/* ── MATCHES ── */
+.sport-tabs{display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap}
+.stab{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;background:var(--card);border:1px solid var(--border);color:var(--muted);transition:all .2s}
+.stab:hover{border-color:var(--gold);color:var(--text)}
+.stab.active{background:rgba(245,166,35,.12);border-color:var(--gold);color:var(--gold)}
+.matches-list{display:flex;flex-direction:column;gap:7px}
+.match-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.match-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:transparent;transition:background .2s}
+.match-card:hover::before{background:var(--gold)}
+.match-card.live::before{background:var(--green)}
+.match-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.match-league{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.live-badge{display:flex;align-items:center;gap:4px;background:rgba(0,230,118,.12);color:var(--green);border:1px solid rgba(0,230,118,.3);font-size:10px;font-weight:800;padding:2px 6px;border-radius:4px}
+.live-badge .d{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1s infinite}
+.match-score-display{font-size:12px;color:var(--muted)}
+.match-score-display strong{color:var(--green)}
+.match-teams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-bottom:10px}
+.team{display:flex;align-items:center;gap:7px}
+.team.away{flex-direction:row-reverse;text-align:right}
+.team-emo{width:30px;height:30px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:15px;border:1px solid var(--border);flex-shrink:0}
+.team-name{font-size:14px;font-weight:700}
+.vs-col{text-align:center}
+.vs{font-family:'Exo 2',sans-serif;font-size:18px;font-weight:900;color:var(--muted)}
+.match-time-label{font-size:10px;color:var(--cyan);font-weight:700}
+.odds-row{display:flex;gap:5px}
+.odd-btn{flex:1;background:var(--accent);border:1px solid var(--border);border-radius:6px;padding:7px 4px;cursor:pointer;transition:all .2s;text-align:center}
+.odd-btn:hover{background:rgba(245,166,35,.15);border-color:var(--gold)}
+.odd-btn.sel{background:rgba(245,166,35,.2);border-color:var(--gold)}
+.odd-lbl{font-size:10px;color:var(--muted);margin-bottom:1px}
+.odd-val{font-family:'Exo 2',sans-serif;font-size:17px;font-weight:800;color:var(--gold)}
+
+/* ── BET SLIP ── */
+.betslip{background:var(--bg2);border-left:1px solid var(--border);display:flex;flex-direction:column;max-height:calc(100vh - 90px);overflow:hidden}
+.bs-tabs{display:flex;border-bottom:1px solid var(--border)}
+.bs-tab{flex:1;padding:13px 0;text-align:center;font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all .2s}
+.bs-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.bs-body{flex:1;overflow-y:auto;padding:14px}
+.empty-slip{display:flex;flex-direction:column;align-items:center;justify-content:center;height:180px;color:var(--muted);text-align:center;gap:6px}
+.empty-slip .ei{font-size:38px;opacity:.3}
+.slip-item{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:10px;margin-bottom:7px;position:relative}
+.si-sport{font-size:10px;color:var(--muted);margin-bottom:3px}
+.si-match{font-size:12px;font-weight:600;margin-bottom:2px}
+.si-pick{font-size:13px;color:var(--gold);font-weight:700}
+.si-odd{font-family:'Exo 2',sans-serif;font-size:19px;font-weight:900;color:var(--cyan);float:right}
+.si-rm{position:absolute;top:6px;right:6px;color:var(--muted);cursor:pointer;font-size:15px;padding:2px 5px;border-radius:3px;transition:all .15s}
+.si-rm:hover{color:var(--red);background:rgba(255,61,87,.1)}
+.bs-footer{padding:14px;border-top:1px solid var(--border)}
+.qs-row{display:flex;gap:4px;margin-bottom:10px}
+.qs{flex:1;padding:5px;background:var(--accent);border:1px solid var(--border);border-radius:5px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;text-align:center;transition:all .15s}
+.qs:hover{color:var(--gold);border-color:var(--gold)}
+.stake-row{display:flex;align-items:center;gap:7px;margin-bottom:10px}
+.stake-lbl{font-size:12px;color:var(--muted);flex-shrink:0}
+.stake-inp{flex:1;background:var(--accent);border:1px solid var(--border);border-radius:7px;padding:8px 10px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;outline:none;transition:border-color .2s}
+.stake-inp:focus{border-color:var(--gold)}
+.payout-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.payout-val{font-family:'Exo 2',sans-serif;font-size:22px;font-weight:900;color:var(--green)}
+.place-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--gold),#d4891a);color:#000;font-family:'Exo 2',sans-serif;font-size:17px;font-weight:900;letter-spacing:1px;border:none;border-radius:8px;cursor:pointer;transition:all .2s;text-transform:uppercase}
+.place-btn:hover{filter:brightness(1.1);box-shadow:0 6px 20px rgba(245,166,35,.3)}
+.place-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ── DEPOSIT PAGE ── */
+.deposit-page{max-width:700px;margin:30px auto;padding:0 16px}
+.dep-title{font-family:'Exo 2',sans-serif;font-size:28px;font-weight:900;margin-bottom:6px}
+.dep-sub{color:var(--muted);font-size:14px;margin-bottom:24px}
+.dep-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px}
+.dep-method{background:var(--card);border:2px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:all .2s;text-align:center}
+.dep-method:hover,.dep-method.sel{border-color:var(--gold);background:rgba(245,166,35,.06)}
+.dep-method .dm-icon{font-size:32px;margin-bottom:6px}
+.dep-method .dm-name{font-family:'Exo 2',sans-serif;font-size:15px;font-weight:800}
+.dep-method .dm-num{font-size:12px;color:var(--cyan);font-weight:700;margin-top:3px}
+.dep-steps{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:20px}
+.step{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
+.step:last-child{margin-bottom:0}
+.step-num{width:26px;height:26px;border-radius:50%;background:var(--gold);color:#000;font-family:'Exo 2',sans-serif;font-weight:900;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-txt{font-size:14px;line-height:1.5}
+.step-txt strong{color:var(--gold)}
+.dep-form{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px}
+.form-group{margin-bottom:14px}
+.form-lbl{font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:600;display:block}
+.form-inp{width:100%;background:var(--accent);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;outline:none;transition:border-color .2s}
+.form-inp:focus{border-color:var(--gold)}
+.upload-zone{border:2px dashed var(--border);border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;font-size:13px;color:var(--muted)}
+.upload-zone:hover{border-color:var(--gold);color:var(--text)}
+.upload-zone input{display:none}
+.upload-preview{max-width:100%;max-height:150px;border-radius:6px;margin-top:10px;border:1px solid var(--border)}
+.notice{background:rgba(0,229,255,.06);border:1px solid rgba(0,229,255,.2);border-radius:8px;padding:12px;font-size:12px;color:var(--cyan);margin-bottom:14px}
+.security-note{background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.2);border-radius:8px;padding:10px;font-size:12px;color:var(--green);margin-top:10px}
+
+/* ── PROFILE PAGE ── */
+.profile-page{max-width:700px;margin:24px auto;padding:0 16px}
+.profile-header{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--purple));display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.profile-name{font-family:'Exo 2',sans-serif;font-size:22px;font-weight:900}
+.profile-id{font-size:12px;color:var(--muted)}
+.profile-balance{margin-left:auto;text-align:right}
+.pb-lbl{font-size:11px;color:var(--muted)}
+.pb-val{font-family:'Exo 2',sans-serif;font-size:24px;font-weight:900;color:var(--green)}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+.stat-val{font-family:'Exo 2',sans-serif;font-size:22px;font-weight:900;color:var(--gold)}
+.stat-lbl{font-size:12px;color:var(--muted);margin-top:3px}
+.history-table{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.ht-header{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;padding:10px 14px;background:var(--accent);font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.ht-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;padding:10px 14px;font-size:13px;border-top:1px solid var(--border);align-items:center}
+.ht-row:hover{background:var(--accent)}
+.status-win{color:var(--green);font-weight:700}
+.status-loss{color:var(--red);font-weight:700}
+.status-pending{color:var(--gold);font-weight:700}
+
+/* ── TOAST & MODAL ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#000;padding:11px 22px;border-radius:8px;font-weight:700;font-size:14px;transition:transform .3s;z-index:999;box-shadow:0 8px 24px rgba(0,230,118,.3)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.error{background:var(--red);color:#fff;box-shadow:0 8px 24px rgba(255,61,87,.3)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:26px;width:360px;max-width:95vw;position:relative;transform:scale(.95);transition:transform .2s}
+.overlay.open .modal{transform:scale(1)}
+.modal-title{font-family:'Exo 2',sans-serif;font-size:22px;font-weight:900;margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--muted);margin-bottom:18px}
+.mi{width:100%;background:var(--accent);border:1px solid var(--border);border-radius:8px;padding:10px 13px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:14px;outline:none;margin-bottom:10px;transition:border-color .2s}
+.mi:focus{border-color:var(--gold)}
+.mcl{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;padding:4px 7px;border-radius:4px;transition:color .15s}
+.mcl:hover{color:var(--text)}
+.terms{font-size:11px;color:var(--muted);text-align:center;margin-top:8px}
+.tabs-row{display:flex;gap:4px;margin-bottom:14px}
+.tr-tab{flex:1;padding:8px;border-radius:7px;text-align:center;font-size:13px;font-weight:700;cursor:pointer;color:var(--muted);background:var(--accent);border:1px solid var(--border);transition:all .2s}
+.tr-tab.active{color:var(--gold);border-color:var(--gold)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Lucky<em>Bet</em> <span style="font-size:13px;font-weight:600;color:var(--muted);-webkit-text-fill-color:var(--muted)">🇪🇹 ETH</span></div>
+  <div class="nav-center">
+    <button class="nav-btn active" onclick="showPage('home',this)">🏠 Home</button>
+    <button class="nav-btn" onclick="showPage('sports',this)">⚽ Sports</button>
+    <button class="nav-btn" onclick="showPage('casino',this)">🎰 Casino</button>
+    <button class="nav-btn" onclick="showPage('deposit',this)">💳 Deposit</button>
+    <button class="nav-btn" onclick="showPage('profile',this)">👤 My Account</button>
+  </div>
+  <div class="nav-right">
+    <div class="wallet-chip" id="walletChip" style="display:none">💰 <span class="bal" id="balDisplay">0.00</span> <span style="color:var(--muted);font-size:12px">ETB</span></div>
+    <button class="btn btn-outline" onclick="openModal('login')" id="loginBtn">Log In</button>
+    <button class="btn btn-gold" onclick="openModal('register')" id="regBtn">Register</button>
+    <button class="btn btn-outline" onclick="logout()" id="logoutBtn" style="display:none">Logout</button>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker"><div class="ticker-track" id="ticker"></div></div>
+
+<!-- ════════════════ HOME PAGE ════════════════ -->
+<div class="page active" id="page-home">
+<div class="home-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sb-title">Live Now</div>
+    <div class="sb-item active" onclick="filterMatches('all',this)"><span>🔴</span> All Live <span class="sb-live" id="liveTotal">8</span></div>
+    <div class="sb-item" onclick="filterMatches('soccer',this)"><span>⚽</span> Football <span class="sb-live">3</span></div>
+    <div class="sb-item" onclick="filterMatches('basketball',this)"><span>🏀</span> Basketball <span class="sb-live">2</span></div>
+    <div class="sb-item" onclick="filterMatches('tennis',this)"><span>🎾</span> Tennis <span class="sb-live">3</span></div>
+    <div class="sb-title" style="margin-top:8px">Sports</div>
+    <div class="sb-item" onclick="filterMatches('soccer',this)"><span>⚽</span> Football <span class="sb-badge">142</span></div>
+    <div class="sb-item" onclick="filterMatches('basketball',this)"><span>🏀</span> Basketball <span class="sb-badge">78</span></div>
+    <div class="sb-item" onclick="filterMatches('tennis',this)"><span>🎾</span> Tennis <span class="sb-badge">95</span></div>
+    <div class="sb-item" onclick="filterMatches('hockey',this)"><span>🏒</span> Ice Hockey <span class="sb-badge">34</span></div>
+    <div class="sb-item" onclick="filterMatches('mma',this)"><span>🥊</span> MMA / Boxing <span class="sb-badge">18</span></div>
+    <div class="sb-item" onclick="filterMatches('esports',this)"><span>🎮</span> eSports <span class="sb-badge">56</span></div>
+    <div class="sb-item" onclick="filterMatches('cricket',this)"><span>🏏</span> Cricket <span class="sb-badge">29</span></div>
+    <div class="sb-item" onclick="filterMatches('rugby',this)"><span>🏉</span> Rugby <span class="sb-badge">22</span></div>
+    <div class="sb-title" style="margin-top:8px">Virtual</div>
+    <div class="sb-item" onclick="openGame('aviator')"><span>✈️</span> Aviator</div>
+    <div class="sb-item" onclick="openGame('keno')"><span>🎱</span> Keno</div>
+    <div class="sb-item" onclick="openGame('spin')"><span>🎡</span> Spin & Win</div>
+    <div class="sb-item" onclick="openGame('dice')"><span>🎲</span> Dice Rush</div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-tag">🔥 FEATURED</div>
+      <div class="hero-title">Win Big with <span>LuckyBet</span></div>
+      <div class="hero-sub">Sports betting · Aviator · Keno · Live Casino — all in one place 🇪🇹</div>
+      <div class="hero-actions">
+        <button class="btn btn-gold" onclick="showPage('deposit',null)">💳 Deposit Now</button>
+        <button class="btn btn-outline" onclick="openGame('aviator')">✈️ Play Aviator</button>
+      </div>
+      <div class="hero-floats">
+        <div class="hf"><div class="hf-val">1200+</div><div class="hf-lbl">Events Today</div></div>
+        <div class="hf"><div class="hf-val" id="liveHeroCount">8</div><div class="hf-lbl">Live Now</div></div>
+      </div>
+    </div>
+
+    <!-- Games -->
+    <div class="section-hdr"><div class="section-title">Casino & Virtual Games</div><div class="see-all">View All →</div></div>
+    <div class="games-grid">
+      <div class="game-card" onclick="openGame('aviator')"><div class="game-hot">HOT</div><div class="game-icon">✈️</div><div class="game-name">Aviator</div><div class="game-desc">Crash game</div></div>
+      <div class="game-card" onclick="openGame('keno')"><div class="game-icon">🎱</div><div class="game-name">Keno</div><div class="game-desc">Pick numbers</div></div>
+      <div class="game-card" onclick="openGame('spin')"><div class="game-new">NEW</div><div class="game-icon">🎡</div><div class="game-name">Spin & Win</div><div class="game-desc">Lucky wheel</div></div>
+      <div class="game-card" onclick="openGame('dice')"><div class="game-icon">🎲</div><div class="game-name">Dice Rush</div><div class="game-desc">Roll to win</div></div>
+      <div class="game-card" onclick="openGame('coin')"><div class="game-icon">🪙</div><div class="game-name">Coin Flip</div><div class="game-desc">50/50 classic</div></div>
+      <div class="game-card" onclick="openGame('mine')"><div class="game-icon">💣</div><div class="game-name">Mines</div><div class="game-desc">Avoid bombs</div></div>
+    </div>
+
+    <!-- Matches -->
+    <div class="section-hdr"><div class="section-title">Live & Upcoming</div><div class="see-all">View All →</div></div>
+    <div class="sport-tabs" id="sportTabs">
+      <div class="stab active" onclick="setSTab(this,'all')">🌍 All</div>
+      <div class="stab" onclick="setSTab(this,'soccer')">⚽ Football</div>
+      <div class="stab" onclick="setSTab(this,'basketball')">🏀 Basketball</div>
+      <div class="stab" onclick="setSTab(this,'tennis')">🎾 Tennis</div>
+      <div class="stab" onclick="setSTab(this,'mma')">🥊 MMA</div>
+      <div class="stab" onclick="setSTab(this,'esports')">🎮 eSports</div>
+    </div>
+    <div class="matches-list" id="matchesList"></div>
+  </main>
+
+  <!-- Bet Slip -->
+  <aside class="betslip">
+    <div class="bs-tabs">
+      <div class="bs-tab active" onclick="setBsTab(this)">Bet Slip (<span id="slipCount">0</span>)</div>
+      <div class="bs-tab" onclick="setBsTab(this)">My Bets</div>
+    </div>
+    <div class="bs-body" id="bsBody">
+      <div class="empty-slip"><div class="ei">🎯</div><p style="font-size:13px">Select odds to build<br>your bet slip</p></div>
+    </div>
+    <div id="bsFooter" style="display:none">
+      <div class="bs-footer">
+        <div class="qs-row">
+          <div class="qs" onclick="setStake(10)">10</div>
+          <div class="qs" onclick="setStake(20)">20</div>
+          <div class="qs" onclick="setStake(50)">50</div>
+          <div class="qs" onclick="setStake(100)">100</div>
+          <div class="qs" onclick="setStake(500)">500</div>
+        </div>
+        <div class="stake-row">
+          <span class="stake-lbl">Stake (ETB):</span>
+          <input type="number" class="stake-inp" id="stakeInp" value="10" min="1" oninput="calcPayout()"/>
+        </div>
+        <div class="payout-row">
+          <div><div style="font-size:11px;color:var(--muted)">Total Odds: <span id="totOdds" style="color:var(--gold);font-weight:700">1.00</span></div><div style="font-size:12px;color:var(--muted)">Potential Win</div></div>
+          <div class="payout-val" id="potWin">0.00 ETB</div>
+        </div>
+        <button class="place-btn" onclick="placeBet()">Place Bet</button>
+      </div>
+    </div>
+  </aside>
+</div>
+</div>
+
+<!-- ════════════════ SPORTS PAGE ════════════════ -->
+<div class="page" id="page-sports">
+  <div style="padding:20px;max-width:900px;margin:0 auto">
+    <h2 style="font-family:'Exo 2',sans-serif;font-size:24px;font-weight:900;margin-bottom:16px">⚽ All Sports</h2>
+    <div class="sport-tabs" id="sportTabs2">
+      <div class="stab active" onclick="setSTab2(this,'all')">All</div>
+      <div class="stab" onclick="setSTab2(this,'soccer')">⚽ Football</div>
+      <div class="stab" onclick="setSTab2(this,'basketball')">🏀 Basketball</div>
+      <div class="stab" onclick="setSTab2(this,'tennis')">🎾 Tennis</div>
+      <div class="stab" onclick="setSTab2(this,'hockey')">🏒 Hockey</div>
+      <div class="stab" onclick="setSTab2(this,'mma')">🥊 MMA</div>
+      <div class="stab" onclick="setSTab2(this,'esports')">🎮 eSports</div>
+      <div class="stab" onclick="setSTab2(this,'cricket')">🏏 Cricket</div>
+    </div>
+    <div class="matches-list" id="matchesList2"></div>
+  </div>
+</div>
+
+<!-- ════════════════ CASINO PAGE ════════════════ -->
+<div class="page" id="page-casino">
+  <div style="padding:20px;max-width:900px;margin:0 auto">
+    <h2 style="font-family:'Exo 2',sans-serif;font-size:24px;font-weight:900;margin-bottom:6px">🎰 Casino & Virtual Games</h2>
+    <p style="color:var(--muted);font-size:14px;margin-bottom:20px">Play instantly — winnings credited to your wallet</p>
+    <div class="games-grid" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">
+      <div class="game-card" onclick="openGame('aviator')"><div class="game-hot">HOT</div><div class="game-icon">✈️</div><div class="game-name">Aviator</div><div class="game-desc">Crash multiplier</div></div>
+      <div class="game-card" onclick="openGame('keno')"><div class="game-icon">🎱</div><div class="game-name">Keno</div><div class="game-desc">Pick 1–10 numbers</div></div>
+      <div class="game-card" onclick="openGame('spin')"><div class="game-new">NEW</div><div class="game-icon">🎡</div><div class="game-name">Spin & Win</div><div class="game-desc">Lucky wheel spins</div></div>
+      <div class="game-card" onclick="openGame('dice')"><div class="game-icon">🎲</div><div class="game-name">Dice Rush</div><div class="game-desc">Predict the roll</div></div>
+      <div class="game-card" onclick="openGame('coin')"><div class="game-icon">🪙</div><div class="game-name">Coin Flip</div><div class="game-desc">Double or nothing</div></div>
+      <div class="game-card" onclick="openGame('mine')"><div class="game-icon">💣</div><div class="game-name">Mines</div><div class="game-desc">Find the gems</div></div>
+      <div class="game-card" onclick="openGame('hilo')"><div class="game-icon">🃏</div><div class="game-name">Hi-Lo Cards</div><div class="game-desc">Higher or lower</div></div>
+      <div class="game-card" onclick="openGame('plinko')"><div class="game-icon">⚪</div><div class="game-name">Plinko</div><div class="game-desc">Drop the ball</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ DEPOSIT PAGE ════════════════ -->
+<div class="page" id="page-deposit">
+<div class="deposit-page">
+  <div class="dep-title">💳 Deposit Funds</div>
+  <div class="dep-sub">Choose your payment method and follow the steps below</div>
+
+  <div class="dep-methods">
+    <div class="dep-method sel" id="dm-telebirr" onclick="selMethod('telebirr')">
+      <div class="dm-icon">📱</div>
+      <div class="dm-name">TeleBirr</div>
+      <div class="dm-num">0924004611</div>
+    </div>
+    <div class="dep-method" id="dm-cbe" onclick="selMethod('cbe')">
+      <div class="dm-icon">🏦</div>
+      <div class="dm-name">CBE Birr</div>
+      <div class="dm-num">0924004611</div>
+    </div>
+    <div class="dep-method" id="dm-mpesa" onclick="selMethod('mpesa')">
+      <div class="dm-icon">💚</div>
+      <div class="dm-name">M-Pesa</div>
+      <div class="dm-num">0714216199</div>
+    </div>
+  </div>
+
+  <div class="dep-steps">
+    <div class="step"><div class="step-num">1</div><div class="step-txt">Open your <strong id="stepMethodName">TeleBirr</strong> app and send your deposit amount to number <strong id="stepNum">0924004611</strong></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-txt">After payment, take a <strong>screenshot</strong> of the confirmation screen showing the transaction reference number</div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-txt">Fill in the form below with the <strong>exact amount</strong> and <strong>reference number</strong>, then upload your screenshot</div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-txt">Our team will verify and <strong>credit your wallet within 5–15 minutes</strong></div></div>
+  </div>
+
+  <div class="notice">⚠️ Only send to the exact number shown. LuckyBet will never ask you to send money to a different number. Minimum deposit: <strong>50 ETB</strong></div>
+
+  <div class="dep-form">
+    <div class="form-group">
+      <label class="form-lbl">Your Full Name</label>
+      <input class="form-inp" type="text" id="depName" placeholder="As registered on your account"/>
+    </div>
+    <div class="form-group">
+      <label class="form-lbl">Your Phone Number</label>
+      <input class="form-inp" type="tel" id="depPhone" placeholder="09XXXXXXXX"/>
+    </div>
+    <div class="form-group">
+      <label class="form-lbl">Amount Sent (ETB)</label>
+      <input class="form-inp" type="number" id="depAmount" placeholder="e.g. 200" min="50"/>
+    </div>
+    <div class="form-group">
+      <label class="form-lbl">Transaction Reference Number</label>
+      <input class="form-inp" type="text" id="depRef" placeholder="e.g. TXN123456789"/>
+    </div>
+    <div class="form-group">
+      <label class="form-lbl">Upload Payment Screenshot</label>
+      <label class="upload-zone" for="depScreenshot">
+        <input type="file" id="depScreenshot" accept="image/*" onchange="previewShot(this)"/>
+        <div id="uploadLabel">📸 Click to upload screenshot<br><span style="font-size:11px">JPG, PNG accepted</span></div>
+        <img id="screenshotPreview" class="upload-preview" style="display:none"/>
+      </label>
+    </div>
+    <div class="security-note">🔒 Your submission is encrypted and securely stored. Screenshots are only viewed by our verification team.</div>
+    <div style="margin-top:14px">
+      <button class="btn btn-gold" style="width:100%;padding:13px;font-size:16px" onclick="submitDeposit()">Submit Deposit Request</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ════════════════ PROFILE PAGE ════════════════ -->
+<div class="page" id="page-profile">
+<div class="profile-page">
+  <div class="profile-header">
+    <div class="avatar">👤</div>
+    <div>
+      <div class="profile-name" id="profName">–</div>
+      <div class="profile-id" id="profId">ID: –</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:3px" id="profPhone">–</div>
+    </div>
+    <div class="profile-balance">
+      <div class="pb-lbl">Wallet Balance</div>
+      <div class="pb-val" id="profBal">0.00 ETB</div>
+    </div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-val" id="statBets">0</div><div class="stat-lbl">Total Bets</div></div>
+    <div class="stat-card"><div class="stat-val" id="statWins">0</div><div class="stat-lbl">Wins</div></div>
+    <div class="stat-card"><div class="stat-val" id="statDeposits">0 ETB</div><div class="stat-lbl">Deposited</div></div>
+  </div>
+  <div class="section-hdr" style="margin-bottom:0"><div class="section-title">Bet History</div></div>
+  <div class="history-table">
+    <div class="ht-header"><span>Game/Sport</span><span>Pick</span><span>Stake</span><span>Odds</span><span>Result</span></div>
+    <div id="betHistory"></div>
+  </div>
+</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- AUTH MODAL -->
+<div class="overlay" id="authOverlay" onclick="closeOvOutside(event)">
+  <div class="modal">
+    <button class="mcl" onclick="closeOverlay('authOverlay')">✕</button>
+    <div id="authContent"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// SECURITY HELPERS
+// ══════════════════════════════════════════
+function sanitize(str){ return String(str).replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c])) }
+function genId(){ return 'LB'+Math.random().toString(36).substr(2,8).toUpperCase() }
+function hashPass(p){ let h=0;for(let i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0}return h.toString(16) }
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let currentUser = JSON.parse(localStorage.getItem('lb_user')||'null');
+let balance = currentUser ? (parseFloat(localStorage.getItem('lb_bal_'+currentUser.id))||0) : 0;
+let betSlip = [];
+let betHistory = JSON.parse(localStorage.getItem('lb_history_'+(currentUser?.id||'x'))||'[]');
+let totalBets=betHistory.length, wins=betHistory.filter(b=>b.result==='win').length;
+let totalDeposited=parseFloat(localStorage.getItem('lb_dep_'+(currentUser?.id||'x'))||'0');
+let currentSport='all';
+let selectedMethod='telebirr';
+
+const METHODS={
+  telebirr:{name:'TeleBirr',num:'0924004611',icon:'📱'},
+  cbe:{name:'CBE Birr',num:'0924004611',icon:'🏦'},
+  mpesa:{name:'M-Pesa',num:'0714216199',icon:'💚'}
+};
+
+// ══════════════════════════════════════════
+// MATCHES DATA
+// ══════════════════════════════════════════
+const MATCHES=[
+  {id:1,sport:'soccer',league:'UEFA Champions League',home:'Real Madrid',away:'Man City',he:'⚪',ae:'🔵',time:'45\'',score:'1-0',live:true,odds:{h:2.10,d:3.40,a:3.80}},
+  {id:2,sport:'soccer',league:'Premier League',home:'Arsenal',away:'Liverpool',he:'🔴',ae:'🔴',time:'20:30',live:false,odds:{h:2.50,d:3.20,a:2.90}},
+  {id:3,sport:'basketball',league:'NBA',home:'Lakers',away:'Warriors',he:'💛',ae:'💙',time:'Q3',score:'78-82',live:true,odds:{h:1.90,d:null,a:2.10}},
+  {id:4,sport:'tennis',league:'ATP Miami',home:'Djokovic',away:'Alcaraz',he:'🎾',ae:'🎾',time:'Set 2',score:'6-4,3-5',live:true,odds:{h:1.65,d:null,a:2.45}},
+  {id:5,sport:'soccer',league:'La Liga',home:'Barcelona',away:'Atletico',he:'🔵',ae:'🔴',time:'22:00',live:false,odds:{h:1.75,d:3.60,a:4.80}},
+  {id:6,sport:'mma',league:'UFC 305',home:'Jones',away:'Miocic',he:'🥊',ae:'🥊',time:'23:00',live:false,odds:{h:1.45,d:null,a:2.80}},
+  {id:7,sport:'esports',league:'CS2 ESL Pro',home:'NaVi',away:'G2',he:'💛',ae:'🟢',time:'Map 2',score:'10-12',live:true,odds:{h:2.30,d:null,a:1.70}},
+  {id:8,sport:'cricket',league:'IPL 2025',home:'Mumbai',away:'Chennai',he:'🔵',ae:'🟡',time:'14:30',live:false,odds:{h:1.85,d:null,a:2.05}},
+  {id:9,sport:'hockey',league:'NHL',home:'Rangers',away:'Bruins',he:'🔵',ae:'⚫',time:'P2',score:'2-1',live:true,odds:{h:1.95,d:null,a:2.05}},
+  {id:10,sport:'soccer',league:'Bundesliga',home:'Bayern',away:'Dortmund',he:'🔴',ae:'🟡',time:'17:30',live:false,odds:{h:1.55,d:4.20,a:6.00}},
+];
+
+// ══════════════════════════════════════════
+// TICKER
+// ══════════════════════════════════════════
+function buildTicker(){
+  const items=MATCHES.filter(m=>m.live).map(m=>`
+    <span class="tick-item">
+      ${m.live?'<span class="live-dot"></span>':''}
+      <b>${m.home} vs ${m.away}</b>
+      ${m.score?`<span style="color:var(--green)">${m.score}</span>`:''}
+      <span style="color:var(--gold)">${m.odds.h} / ${m.odds.d||'–'} / ${m.odds.a}</span>
+    </span>`).join('');
+  document.getElementById('ticker').innerHTML=items+items;
+}
+
+// ══════════════════════════════════════════
+// RENDER MATCHES
+// ══════════════════════════════════════════
+function renderMatches(filter,containerId){
+  const list=document.getElementById(containerId);
+  if(!list)return;
+  const data=filter==='all'?MATCHES:MATCHES.filter(m=>m.sport===filter);
+  list.innerHTML=data.map(m=>{
+    const drawBtn=m.odds.d?`<div class="odd-btn" onclick="addOdd(event,${m.id},'Draw',${m.odds.d})"><div class="odd-lbl">Draw</div><div class="odd-val">${m.odds.d}</div></div>`:`<div class="odd-btn" style="opacity:.3;cursor:not-allowed"><div class="odd-lbl">Draw</div><div class="odd-val">–</div></div>`;
+    return`<div class="match-card${m.live?' live':''}" id="mc${m.id}">
+      <div class="match-top">
+        <div class="match-league">${m.live?'<span class="live-badge"><span class="d"></span>LIVE</span>':''}<span>${m.league}</span></div>
+        ${m.score?`<div class="match-score-display"><strong>${m.score}</strong> ${m.time}</div>`:`<div class="match-score-display">${m.time}</div>`}
+      </div>
+      <div class="match-teams">
+        <div class="team"><div class="team-emo">${m.he}</div><div><div class="team-name">${m.home}</div></div></div>
+        <div class="vs-col"><div class="vs">VS</div>${!m.live?`<div class="match-time-label">${m.time}</div>`:''}</div>
+        <div class="team away"><div class="team-emo">${m.ae}</div><div><div class="team-name">${m.away}</div></div></div>
+      </div>
+      <div class="odds-row">
+        <div class="odd-btn" onclick="addOdd(event,${m.id},'${m.home}',${m.odds.h})"><div class="odd-lbl">1 ${m.home}</div><div class="odd-val" id="ov${m.id}h">${m.odds.h}</div></div>
+        ${drawBtn}
+        <div class="odd-btn" onclick="addOdd(event,${m.id},'${m.away}',${m.odds.a})"><div class="odd-lbl">2 ${m.away}</div><div class="odd-val" id="ov${m.id}a">${m.odds.a}</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setSTab(el,f){
+  document.querySelectorAll('#sportTabs .stab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderMatches(f,'matchesList');
+}
+function setSTab2(el,f){
+  document.querySelectorAll('#sportTabs2 .stab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderMatches(f,'matchesList2');
+}
+function filterMatches(f,el){
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  renderMatches(f,'matchesList');
+}
+
+// ══════════════════════════════════════════
+// BET SLIP
+// ══════════════════════════════════════════
+function addOdd(e,mid,pick,odd){
+  e.stopPropagation();
+  if(!currentUser){openModal('login');toast('⚠️ Please log in to place bets','error');return;}
+  const m=MATCHES.find(x=>x.id===mid);
+  const ex=betSlip.findIndex(b=>b.mid===mid);
+  if(ex!==-1){
+    if(betSlip[ex].pick===pick){betSlip.splice(ex,1);e.currentTarget.classList.remove('sel');}
+    else{document.querySelectorAll('#mc'+mid+' .odd-btn').forEach(b=>b.classList.remove('sel'));betSlip[ex]={mid,sport:m.league,match:m.home+' vs '+m.away,pick,odd};e.currentTarget.classList.add('sel');}
+  } else {
+    betSlip.push({mid,sport:m.league,match:m.home+' vs '+m.away,pick,odd});
+    e.currentTarget.classList.add('sel');
+  }
+  renderSlip();
+  toast('✓ '+pick+' @ '+odd+' added');
+}
+
+function removeSlipItem(i){
+  betSlip.splice(i,1);
+  renderSlip();
+}
+
+function renderSlip(){
+  const body=document.getElementById('bsBody');
+  const foot=document.getElementById('bsFooter');
+  document.getElementById('slipCount').textContent=betSlip.length;
+  if(!betSlip.length){
+    body.innerHTML='<div class="empty-slip"><div class="ei">🎯</div><p style="font-size:13px">Select odds to build<br>your bet slip</p></div>';
+    foot.style.display='none';return;
+  }
+  body.innerHTML=betSlip.map((b,i)=>`
+    <div class="slip-item">
+      <span class="si-odd">${b.odd}</span>
+      <div class="si-sport">${b.sport}</div>
+      <div class="si-match">${b.match}</div>
+      <div class="si-pick">${b.pick}</div>
+      <span class="si-rm" onclick="removeSlipItem(${i})">✕</span>
+    </div>`).join('');
+  foot.style.display='block';
+  calcPayout();
+}
+
+function calcPayout(){
+  const s=parseFloat(document.getElementById('stakeInp').value)||0;
+  const tot=betSlip.reduce((a,b)=>a*b.odd,1);
+  document.getElementById('totOdds').textContent=tot.toFixed(2);
+  document.getElementById('potWin').textContent=(s*tot).toFixed(2)+' ETB';
+}
+
+function setStake(v){document.getElementById('stakeInp').value=v;calcPayout();}
+
+function placeBet(){
+  if(!currentUser){openModal('login');return;}
+  const s=parseFloat(document.getElementById('stakeInp').value)||0;
+  if(s<1){toast('⚠️ Minimum stake is 1 ETB','error');return;}
+  if(s>balance){toast('⚠️ Insufficient balance. Please deposit.','error');return;}
+  if(!betSlip.length){return;}
+  balance-=s;
+  saveBalance();
+  const tot=betSlip.reduce((a,b)=>a*b.odd,1);
+  const win=Math.random()>0.55;
+  const profit=win?parseFloat((s*tot).toFixed(2)):0;
+  if(win){balance+=profit;saveBalance();}
+  const entry={date:new Date().toLocaleDateString(),game:'Sports',pick:betSlip.map(b=>b.pick).join(', '),stake:s,odds:tot.toFixed(2),result:win?'win':'loss',profit:win?'+'+profit:'-'+s};
+  betHistory.unshift(entry);totalBets++;if(win)wins++;
+  localStorage.setItem('lb_history_'+currentUser.id,JSON.stringify(betHistory));
+  document.querySelectorAll('.odd-btn.sel').forEach(b=>b.classList.remove('sel'));
+  betSlip=[];renderSlip();updateUI();
+  if(win){toast('🎉 You WON '+profit+' ETB!');}else{toast('😔 Better luck next time!','error');}
+}
+
+// ══════════════════════════════════════════
+// DEPOSIT
+// ══════════════════════════════════════════
+function selMethod(m){
+  selectedMethod=m;
+  ['telebirr','cbe','mpesa'].forEach(x=>{document.getElementById('dm-'+x).classList.toggle('sel',x===m)});
+  document.getElementById('stepMethodName').textContent=METHODS[m].name;
+  document.getElementById('stepNum').textContent=METHODS[m].num;
+}
+
+function previewShot(inp){
+  const f=inp.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    document.getElementById('screenshotPreview').src=e.target.result;
+    document.getElementById('screenshotPreview').style.display='block';
+    document.getElementById('uploadLabel').style.display='none';
+  };r.readAsDataURL(f);
+}
+
+function submitDeposit(){
+  if(!currentUser){openModal('login');toast('⚠️ Please log in first','error');return;}
+  const name=document.getElementById('depName').value.trim();
+  const phone=document.getElementById('depPhone').value.trim();
+  const amt=parseFloat(document.getElementById('depAmount').value);
+  const ref=document.getElementById('depRef').value.trim();
+  const file=document.getElementById('depScreenshot').files[0];
+  if(!name||!phone||!amt||!ref){toast('⚠️ Please fill all fields','error');return;}
+  if(amt<50){toast('⚠️ Minimum deposit is 50 ETB','error');return;}
+  if(!file){toast('⚠️ Please upload your payment screenshot','error');return;}
+  if(!/^(09|07)\d{8}$/.test(phone)){toast('⚠️ Invalid phone number format','error');return;}
+  // Save pending deposit
+  const deps=JSON.parse(localStorage.getItem('lb_pending_deps')||'[]');
+  deps.push({userId:currentUser.id,name:sanitize(name),phone:sanitize(phone),amount:amt,ref:sanitize(ref),method:selectedMethod,status:'pending',date:new Date().toISOString()});
+  localStorage.setItem('lb_pending_deps',JSON.stringify(deps));
+  toast('✅ Deposit request submitted! We will verify and credit within 15 minutes.');
+  document.getElementById('depAmount').value='';
+  document.getElementById('depRef').value='';
+  document.getElementById('depScreenshot').value='';
+  document.getElementById('screenshotPreview').style.display='none';
+  document.getElementById('uploadLabel').style.display='block';
+}
+
+// ══════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════
+function openModal(type){
+  document.getElementById('authContent').innerHTML=type==='login'?loginHTML():registerHTML();
+  document.getElementById('authOverlay').classList.add('open');
+}
+
+function loginHTML(){return`
+  <div class="modal-title">Welcome Back</div>
+  <div class="modal-sub">Log in to your LuckyBet account</div>
+  <div class="tabs-row"><div class="tr-tab active" onclick="swTab(this,0)">Log In</div><div class="tr-tab" onclick="swTab(this,1)">Register</div></div>
+  <input class="mi" id="li_phone" type="tel" placeholder="Phone: 09XXXXXXXX"/>
+  <input class="mi" id="li_pass" type="password" placeholder="Password"/>
+  <button class="btn btn-gold" style="width:100%;padding:12px;font-size:15px" onclick="doLogin()">Log In →</button>
+  <p class="terms">Don't have an account? <span style="color:var(--gold);cursor:pointer" onclick="openModal('register')">Register here</span></p>`
+}
+
+function registerHTML(){return`
+  <div class="modal-title">Create Account</div>
+  <div class="modal-sub">Join LuckyBet Ethiopia & start winning 🇪🇹</div>
+  <div class="tabs-row"><div class="tr-tab" onclick="swTab(this,0)">Log In</div><div class="tr-tab active" onclick="swTab(this,1)">Register</div></div>
+  <input class="mi" id="reg_name" type="text" placeholder="Full Name"/>
+  <input class="mi" id="reg_phone" type="tel" placeholder="Phone: 09XXXXXXXX"/>
+  <input class="mi" id="reg_pass" type="password" placeholder="Password (min 6 chars)"/>
+  <input class="mi" id="reg_pass2" type="password" placeholder="Confirm Password"/>
+  <button class="btn btn-gold" style="width:100%;padding:12px;font-size:15px" onclick="doRegister()">Create Account →</button>
+  <p class="terms">You must be 18+ to play. Gamble responsibly.</p>`
+}
+
+function swTab(el,idx){
+  document.querySelectorAll('.tr-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  if(idx===0)openModal('login');else openModal('register');
+}
+
+function doLogin(){
+  const phone=document.getElementById('li_phone').value.trim();
+  const pass=document.getElementById('li_pass').value;
+  if(!phone||!pass){toast('⚠️ Fill all fields','error');return;}
+  const users=JSON.parse(localStorage.getItem('lb_users')||'[]');
+  const user=users.find(u=>u.phone===phone&&u.passHash===hashPass(pass));
+  if(!user){toast('⚠️ Invalid phone or password','error');return;}
+  currentUser=user;
+  balance=parseFloat(localStorage.getItem('lb_bal_'+user.id)||'0');
+  betHistory=JSON.parse(localStorage.getItem('lb_history_'+user.id)||'[]');
+  totalBets=betHistory.length;wins=betHistory.filter(b=>b.result==='win').length;
+  totalDeposited=parseFloat(localStorage.getItem('lb_dep_'+user.id)||'0');
+  localStorage.setItem('lb_user',JSON.stringify(user));
+  updateUI();closeOverlay('authOverlay');
+  toast('✅ Welcome back, '+user.name+'!');
+}
+
+function doRegister(){
+  const name=document.getElementById('reg_name').value.trim();
+  const phone=document.getElementById('reg_phone').value.trim();
+  const pass=document.getElementById('reg_pass').value;
+  const pass2=document.getElementById('reg_pass2').value;
+  if(!name||!phone||!pass){toast('⚠️ Fill all fields','error');return;}
+  if(!/^(09|07)\d{8}$/.test(phone)){toast('⚠️ Invalid phone number','error');return;}
+  if(pass.length<6){toast('⚠️ Password must be 6+ characters','error');return;}
+  if(pass!==pass2){toast('⚠️ Passwords do not match','error');return;}
+  const users=JSON.parse(localStorage.getItem('lb_users')||'[]');
+  if(users.find(u=>u.phone===phone)){toast('⚠️ Phone already registered','error');return;}
+  const newUser={id:genId(),name:sanitize(name),phone:sanitize(phone),passHash:hashPass(pass),joined:new Date().toLocaleDateString()};
+  users.push(newUser);
+  localStorage.setItem('lb_users',JSON.stringify(users));
+  currentUser=newUser;balance=0;betHistory=[];totalBets=0;wins=0;totalDeposited=0;
+  localStorage.setItem('lb_user',JSON.stringify(newUser));
+  updateUI();closeOverlay('authOverlay');
+  toast('🎉 Account created! Welcome, '+name+'!');
+}
+
+function logout(){
+  currentUser=null;balance=0;betHistory=[];
+  localStorage.removeItem('lb_user');
+  updateUI();toast('👋 Logged out');
+}
+
+// ══════════════════════════════════════════
+// UI UPDATES
+// ══════════════════════════════════════════
+function updateUI(){
+  const loggedIn=!!currentUser;
+  document.getElementById('loginBtn').style.display=loggedIn?'none':'';
+  document.getElementById('regBtn').style.display=loggedIn?'none':'';
+  document.getElementById('logoutBtn').style.display=loggedIn?'':'none';
+  document.getElementById('walletChip').style.display=loggedIn?'':'none';
+  if(loggedIn){
+    document.getElementById('balDisplay').textContent=balance.toFixed(2);
+    document.getElementById('profName').textContent=currentUser.name;
+    document.getElementById('profId').textContent='ID: '+currentUser.id;
+    document.getElementById('profPhone').textContent='📱 '+currentUser.phone;
+    document.getElementById('profBal').textContent=balance.toFixed(2)+' ETB';
+    document.getElementById('statBets').textContent=totalBets;
+    document.getElementById('statWins').textContent=wins;
+    document.getElementById('statDeposits').textContent=totalDeposited+' ETB';
+    renderHistory();
+  }
+}
+
+function saveBalance(){
+  if(!currentUser)return;
+  localStorage.setItem('lb_bal_'+currentUser.id,balance.toFixed(2));
+  document.getElementById('balDisplay').textContent=balance.toFixed(2);
+  document.getElementById('profBal').textContent=balance.toFixed(2)+' ETB';
+}
+
+function renderHistory(){
+  const h=document.getElementById('betHistory');
+  if(!betHistory.length){h.innerHTML='<div style="padding:16px;text-align:center;color:var(--muted);font-size:13px">No bets yet</div>';return;}
+  h.innerHTML=betHistory.slice(0,20).map(b=>`
+    <div class="ht-row">
+      <span>${b.game||b.date}</span>
+      <span style="font-size:12px">${b.pick}</span>
+      <span>${b.stake} ETB</span>
+      <span>${b.odds}</span>
+      <span class="${b.result==='win'?'status-win':b.result==='pending'?'status-pending':'status-loss'}">${b.result==='win'?'✅ Won '+b.profit+' ETB':b.result==='pending'?'⏳ Pending':'❌ Lost'}</span>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════
+// PAGE NAVIGATION
+// ══════════════════════════════════════════
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  if(id==='sports')renderMatches('all','matchesList2');
+  if(id==='profile')updateUI();
+}
+
+// ══════════════════════════════════════════
+// GAMES LAUNCHER
+// ══════════════════════════════════════════
+function openGame(game){
+  if(!currentUser){openModal('login');toast('⚠️ Please log in to play','error');return;}
+  const map={aviator:'aviator.html',keno:'keno.html',spin:'spin.html',dice:'dice.html',coin:'coin.html',mine:'mines.html',hilo:'hilo.html',plinko:'plinko.html'};
+  if(map[game])window.open(map[game]+'?bal='+balance+'&user='+currentUser.id,'_blank');
+  else toast('🔧 '+game+' coming soon!');
+}
+
+// ══════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════
+function toast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast'+(type==='error'?' error':'');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ══════════════════════════════════════════
+// MODAL HELPERS
+// ══════════════════════════════════════════
+function closeOverlay(id){document.getElementById(id).classList.remove('open');}
+function closeOvOutside(e){if(e.target===document.getElementById('authOverlay'))closeOverlay('authOverlay');}
+function setBsTab(el){document.querySelectorAll('.bs-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');}
+
+// ══════════════════════════════════════════
+// ODDS FLUCTUATION
+// ══════════════════════════════════════════
+setInterval(()=>{
+  const els=document.querySelectorAll('.odd-val');
+  if(els.length){
+    const el=els[Math.floor(Math.random()*els.length)];
+    const v=parseFloat(el.textContent);
+    if(!isNaN(v)&&v>1){
+      const d=(Math.random()-.5)*.08;
+      el.textContent=Math.max(1.05,v+d).toFixed(2);
+      el.style.color=d>0?'var(--green)':'var(--red)';
+      setTimeout(()=>el.style.color='',700);
+    }
+  }
+},2500);
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+buildTicker();
+renderMatches('all','matchesList');
+updateUI();
+</script>
+</body>
+</html>

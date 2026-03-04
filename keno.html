@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Keno – LuckyBet Ethiopia</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700;800;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#06080f;--bg2:#0b0f1a;--card:#111827;--border:#1a2540;--gold:#f5a623;--green:#00e676;--red:#ff3d57;--cyan:#00e5ff;--text:#e8edf5;--muted:#5a6a8a;--accent:#141f35}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:16px;display:flex;flex-direction:column;align-items:center}
+h1{font-family:'Exo 2',sans-serif;font-size:26px;font-weight:900;margin-bottom:4px;background:linear-gradient(90deg,var(--gold),#ffd166);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.back{color:var(--muted);font-size:13px;cursor:pointer;margin-bottom:12px;align-self:flex-start}
+.back:hover{color:var(--gold)}
+.wrap{width:100%;max-width:680px}
+.info-bar{display:flex;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 16px;margin-bottom:14px}
+.ib-item{text-align:center}
+.ib-lbl{font-size:11px;color:var(--muted)}
+.ib-val{font-family:'Exo 2',sans-serif;font-size:18px;font-weight:900}
+.keno-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin-bottom:14px}
+.knum{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:var(--accent);border:1px solid var(--border);border-radius:7px;font-family:'Exo 2',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .2s;user-select:none}
+.knum:hover{border-color:var(--gold);color:var(--gold)}
+.knum.selected{background:rgba(245,166,35,.2);border-color:var(--gold);color:var(--gold)}
+.knum.drawn{background:rgba(0,229,255,.15);border-color:var(--cyan);color:var(--cyan)}
+.knum.hit{background:rgba(0,230,118,.2);border-color:var(--green);color:var(--green);transform:scale(1.1);box-shadow:0 0 12px rgba(0,230,118,.4)}
+.knum.miss{background:rgba(255,61,87,.1);border-color:rgba(255,61,87,.3);color:var(--red);opacity:.6}
+.controls{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px}
+.ctrl-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.ctl{font-size:13px;color:var(--muted);font-weight:600;min-width:80px}
+.inp{background:var(--accent);border:1px solid var(--border);border-radius:7px;padding:8px 12px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;outline:none;transition:border-color .2s;width:120px}
+.inp:focus{border-color:var(--gold)}
+.qs-row{display:flex;gap:5px;flex:1}
+.qs{flex:1;padding:6px;background:var(--accent);border:1px solid var(--border);border-radius:5px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;text-align:center;transition:all .15s}
+.qs:hover{color:var(--gold);border-color:var(--gold)}
+.btn{padding:10px 24px;border:none;border-radius:8px;font-family:'Exo 2',sans-serif;font-size:15px;font-weight:900;cursor:pointer;transition:all .2s;text-transform:uppercase}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#d4891a);color:#000}
+.btn-gold:hover{filter:brightness(1.1)}
+.btn-outline{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-outline:hover{color:var(--text);border-color:var(--gold)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.payout-table{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px}
+.pt-title{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px}
+.pt-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.pt-cell{text-align:center;background:var(--accent);border:1px solid var(--border);border-radius:6px;padding:7px 4px}
+.pt-match{font-size:11px;color:var(--muted);margin-bottom:2px}
+.pt-mult{font-family:'Exo 2',sans-serif;font-size:14px;font-weight:800;color:var(--gold)}
+.result-banner{padding:14px;border-radius:10px;text-align:center;margin-bottom:14px;font-family:'Exo 2',sans-serif;font-size:18px;font-weight:900;display:none}
+.result-banner.show{display:block}
+.drawn-nums{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:14px}
+.dn-title{font-size:12px;color:var(--muted);margin-bottom:8px;font-weight:700}
+.dn-nums{display:flex;flex-wrap:wrap;gap:5px}
+.dn-pill{padding:4px 10px;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.3);border-radius:20px;font-family:'Exo 2',sans-serif;font-size:12px;font-weight:800;color:var(--cyan)}
+.dn-pill.hit{background:rgba(0,230,118,.15);border-color:rgba(0,230,118,.4);color:var(--green)}
+</style>
+</head>
+<body>
+<div class="back" onclick="window.close()">← Back to LuckyBet</div>
+<div class="wrap">
+  <h1>🎱 KENO</h1>
+  <div style="color:var(--muted);font-size:13px;margin-bottom:12px">Pick 1–10 numbers. Match more to win big!</div>
+
+  <div class="info-bar">
+    <div class="ib-item"><div class="ib-lbl">Balance</div><div class="ib-val" id="balVal" style="color:var(--green)">0 ETB</div></div>
+    <div class="ib-item"><div class="ib-lbl">Selected</div><div class="ib-val" id="selCount" style="color:var(--gold)">0/10</div></div>
+    <div class="ib-item"><div class="ib-lbl">Matches</div><div class="ib-val" id="matchCount" style="color:var(--cyan)">–</div></div>
+    <div class="ib-item"><div class="ib-lbl">Last Win</div><div class="ib-val" id="lastWin" style="color:var(--green)">0 ETB</div></div>
+  </div>
+
+  <!-- Keno Grid -->
+  <div class="keno-grid" id="kenoGrid"></div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="ctrl-row">
+      <span class="ctl">Stake:</span>
+      <input class="inp" type="number" id="stakeInp" value="20" min="5" oninput="updatePotential()"/>
+      <div class="qs-row">
+        <div class="qs" onclick="setStake(10)">10</div>
+        <div class="qs" onclick="setStake(25)">25</div>
+        <div class="qs" onclick="setStake(50)">50</div>
+        <div class="qs" onclick="setStake(100)">100</div>
+      </div>
+    </div>
+    <div class="ctrl-row" style="gap:8px">
+      <button class="btn btn-outline" onclick="clearAll()">Clear</button>
+      <button class="btn btn-outline" onclick="quickPick()">🎲 Quick Pick</button>
+      <button class="btn btn-gold" id="playBtn" onclick="playKeno()" style="flex:1">▶ PLAY</button>
+    </div>
+    <div style="font-size:13px;color:var(--muted);margin-top:4px">Potential win: <span id="potWin" style="color:var(--gold);font-weight:700">0 ETB</span></div>
+  </div>
+
+  <!-- Result Banner -->
+  <div class="result-banner" id="resultBanner"></div>
+
+  <!-- Drawn Numbers -->
+  <div class="drawn-nums" id="drawnWrap" style="display:none">
+    <div class="dn-title">Drawn Numbers (20 balls)</div>
+    <div class="dn-nums" id="drawnNums"></div>
+  </div>
+
+  <!-- Payout Table -->
+  <div class="payout-table">
+    <div class="pt-title">Payout Table (per selection count)</div>
+    <div id="payoutTable"></div>
+  </div>
+</div>
+
+<script>
+const params=new URLSearchParams(location.search);
+let balance=parseFloat(params.get('bal')||'1000');
+let selected=new Set();
+let playing=false;
+
+// Payouts: [selections][matches] = multiplier
+const PAYOUTS={
+  1:{1:3.0},
+  2:{1:1.0,2:9.0},
+  3:{2:2.0,3:25},
+  4:{2:1.0,3:5.0,4:60},
+  5:{3:2.0,4:15,5:200},
+  6:{3:1.5,4:6.0,5:50,6:500},
+  7:{4:3.0,5:20,6:100,7:750},
+  8:{4:2.0,5:12,6:50,7:300,8:1000},
+  9:{4:1.5,5:8,6:30,7:150,8:500,9:2000},
+  10:{5:5.0,6:20,7:80,8:300,9:1000,10:5000},
+};
+
+// Build grid
+const grid=document.getElementById('kenoGrid');
+for(let i=1;i<=80;i++){
+  const d=document.createElement('div');
+  d.className='knum';d.id='k'+i;d.textContent=i;
+  d.onclick=()=>toggleNum(i);
+  grid.appendChild(d);
+}
+
+function toggleNum(n){
+  if(playing)return;
+  const el=document.getElementById('k'+n);
+  if(selected.has(n)){selected.delete(n);el.classList.remove('selected');}
+  else if(selected.size<10){selected.add(n);el.classList.add('selected');}
+  document.getElementById('selCount').textContent=selected.size+'/10';
+  updatePotential();
+  renderPayoutTable();
+}
+
+function quickPick(){
+  if(playing)return;
+  clearAll();
+  const count=5+Math.floor(Math.random()*6);
+  while(selected.size<count){
+    const n=Math.floor(Math.random()*80)+1;
+    if(!selected.has(n)){selected.add(n);document.getElementById('k'+n).classList.add('selected');}
+  }
+  document.getElementById('selCount').textContent=selected.size+'/10';
+  updatePotential();renderPayoutTable();
+}
+
+function clearAll(){
+  if(playing)return;
+  selected.forEach(n=>document.getElementById('k'+n).classList.remove('selected'));
+  selected.clear();
+  document.getElementById('selCount').textContent='0/10';
+  document.getElementById('resultBanner').classList.remove('show');
+  document.getElementById('drawnWrap').style.display='none';
+  resetGrid();updatePotential();renderPayoutTable();
+}
+
+function resetGrid(){
+  document.querySelectorAll('.knum').forEach(el=>{el.classList.remove('drawn','hit','miss');});
+}
+
+function setStake(v){document.getElementById('stakeInp').value=v;updatePotential();}
+
+function updatePotential(){
+  const s=parseFloat(document.getElementById('stakeInp').value)||0;
+  const n=selected.size;
+  if(n===0||!PAYOUTS[n]){document.getElementById('potWin').textContent='0 ETB';return;}
+  const maxMult=Math.max(...Object.values(PAYOUTS[n]));
+  document.getElementById('potWin').textContent=(s*maxMult).toFixed(2)+' ETB';
+}
+
+function renderPayoutTable(){
+  const n=selected.size||1;
+  const p=PAYOUTS[n]||PAYOUTS[1];
+  const entries=Object.entries(p);
+  const tableEl=document.getElementById('payoutTable');
+  tableEl.innerHTML=`<div class="pt-grid">${entries.map(([match,mult])=>`
+    <div class="pt-cell">
+      <div class="pt-match">${match} match${match>1?'es':''}</div>
+      <div class="pt-mult">${mult}x</div>
+    </div>`).join('')}</div>`;
+}
+
+async function playKeno(){
+  if(playing)return;
+  if(selected.size===0){showMsg('⚠️ Pick at least 1 number',true);return;}
+  const stake=parseFloat(document.getElementById('stakeInp').value)||0;
+  if(stake<5){showMsg('⚠️ Minimum stake 5 ETB',true);return;}
+  if(stake>balance){showMsg('⚠️ Insufficient balance',true);return;}
+  balance-=stake;updateBal();
+  playing=true;
+  document.getElementById('playBtn').disabled=true;
+  document.getElementById('resultBanner').classList.remove('show');
+  resetGrid();
+
+  // Draw 20 unique numbers
+  const drawn=[];
+  while(drawn.length<20){const n=Math.floor(Math.random()*80)+1;if(!drawn.includes(n))drawn.push(n);}
+
+  // Animate drawing
+  document.getElementById('drawnWrap').style.display='block';
+  document.getElementById('drawnNums').innerHTML='';
+  for(let i=0;i<drawn.length;i++){
+    await sleep(120);
+    const n=drawn[i];
+    const el=document.getElementById('k'+n);
+    const isHit=selected.has(n);
+    el.classList.add(isHit?'hit':'drawn');
+    const pill=document.createElement('span');
+    pill.className='dn-pill'+(isHit?' hit':'');
+    pill.textContent=n;
+    document.getElementById('drawnNums').appendChild(pill);
+  }
+
+  // Count matches
+  const hits=drawn.filter(n=>selected.has(n)).length;
+  document.getElementById('matchCount').textContent=hits;
+
+  // Mark misses
+  selected.forEach(n=>{if(!drawn.includes(n))document.getElementById('k'+n).classList.add('miss');});
+
+  // Calculate win
+  const pTable=PAYOUTS[selected.size]||{};
+  const mult=pTable[hits]||0;
+  const win=parseFloat((stake*mult).toFixed(2));
+  if(win>0){balance+=win;updateBal();}
+  document.getElementById('lastWin').textContent=win.toFixed(2)+' ETB';
+
+  // Result banner
+  const banner=document.getElementById('resultBanner');
+  if(win>0){
+    banner.style.background='rgba(0,230,118,.15)';banner.style.border='1px solid rgba(0,230,118,.4)';banner.style.color='var(--green)';
+    banner.textContent='🎉 '+hits+' Matches! You WON '+win+' ETB ('+mult+'x)!';
+  } else {
+    banner.style.background='rgba(255,61,87,.1)';banner.style.border='1px solid rgba(255,61,87,.3)';banner.style.color='var(--red)';
+    banner.textContent='😔 '+hits+' matches. Better luck next time!';
+  }
+  banner.classList.add('show');
+  playing=false;
+  document.getElementById('playBtn').disabled=false;
+}
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function updateBal(){document.getElementById('balVal').textContent=balance.toFixed(2)+' ETB';}
+
+function showMsg(txt,err=false){
+  const m=document.createElement('div');
+  m.style.cssText=`position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:${err?'#ff3d57':'#00e676'};color:${err?'#fff':'#000'};padding:10px 20px;border-radius:8px;font-weight:700;font-size:14px;z-index:999`;
+  m.textContent=txt;document.body.appendChild(m);setTimeout(()=>m.remove(),2500);
+}
+
+updateBal();renderPayoutTable();
+</script>
+</body>
+</html>

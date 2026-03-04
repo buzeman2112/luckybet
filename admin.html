@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Admin Panel – LuckyBet Ethiopia</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700;800;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#06080f;--bg2:#0b0f1a;--card:#111827;--border:#1a2540;--gold:#f5a623;--green:#00e676;--red:#ff3d57;--cyan:#00e5ff;--text:#e8edf5;--muted:#5a6a8a;--accent:#141f35;--purple:#7c3aed}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:0}
+.admin-nav{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:58px;background:var(--bg2);border-bottom:2px solid var(--red)}
+.admin-logo{font-family:'Exo 2',sans-serif;font-weight:900;font-size:20px;color:var(--red)}
+.admin-logo span{color:var(--gold)}
+.admin-user{font-size:13px;color:var(--muted)}
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-card{background:var(--card);border:2px solid var(--red);border-radius:14px;padding:32px;width:340px;text-align:center}
+.lc-title{font-family:'Exo 2',sans-serif;font-size:26px;font-weight:900;color:var(--red);margin-bottom:4px}
+.lc-sub{font-size:13px;color:var(--muted);margin-bottom:20px}
+.inp{width:100%;background:var(--accent);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;outline:none;margin-bottom:10px;transition:border-color .2s}
+.inp:focus{border-color:var(--red)}
+.btn{padding:10px 20px;border:none;border-radius:8px;font-family:'Exo 2',sans-serif;font-size:15px;font-weight:900;cursor:pointer;transition:all .2s;text-transform:uppercase}
+.btn-red{background:var(--red);color:#fff;width:100%;padding:12px}
+.btn-red:hover{filter:brightness(1.1)}
+.btn-green{background:var(--green);color:#000}
+.btn-green:hover{filter:brightness(1.1)}
+.btn-outline{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-outline:hover{color:var(--text);border-color:var(--gold)}
+.layout{display:grid;grid-template-columns:200px 1fr;min-height:calc(100vh - 58px)}
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:12px 0}
+.sb-item{display:flex;align-items:center;gap:8px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;border-left:3px solid transparent;transition:all .15s}
+.sb-item:hover{background:var(--accent)}
+.sb-item.active{background:var(--accent);border-left-color:var(--red);color:var(--red)}
+.main{padding:20px;overflow-y:auto}
+.page{display:none}.page.active{display:block}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px}
+.sc-val{font-family:'Exo 2',sans-serif;font-size:24px;font-weight:900}
+.sc-lbl{font-size:12px;color:var(--muted);margin-top:3px}
+.section-title{font-family:'Exo 2',sans-serif;font-size:18px;font-weight:900;margin-bottom:14px}
+.section-title::before{content:'';display:inline-block;width:3px;height:16px;background:var(--red);border-radius:2px;margin-right:8px;vertical-align:middle}
+.dep-table{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px}
+.dt-header{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr 1fr;padding:10px 14px;background:var(--accent);font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.dt-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr 1fr;padding:10px 14px;font-size:13px;border-top:1px solid var(--border);align-items:center}
+.dt-row:hover{background:var(--accent)}
+.badge{padding:3px 8px;border-radius:4px;font-size:11px;font-weight:800}
+.badge-pending{background:rgba(245,166,35,.15);color:var(--gold);border:1px solid rgba(245,166,35,.3)}
+.badge-approved{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.3)}
+.badge-rejected{background:rgba(255,61,87,.1);color:var(--red);border:1px solid rgba(255,61,87,.3)}
+.action-btns{display:flex;gap:4px}
+.ab{padding:4px 8px;border:none;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.ab-approve{background:rgba(0,230,118,.15);color:var(--green);border:1px solid rgba(0,230,118,.3)}
+.ab-approve:hover{background:var(--green);color:#000}
+.ab-reject{background:rgba(255,61,87,.1);color:var(--red);border:1px solid rgba(255,61,87,.3)}
+.ab-reject:hover{background:var(--red);color:#fff}
+.users-table{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.ut-header{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;padding:10px 14px;background:var(--accent);font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.ut-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;padding:10px 14px;font-size:13px;border-top:1px solid var(--border);align-items:center}
+.ut-row:hover{background:var(--accent)}
+.credit-form{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.cf-group{display:flex;flex-direction:column;gap:5px}
+.cf-lbl{font-size:12px;color:var(--muted);font-weight:600}
+.cf-inp{background:var(--accent);border:1px solid var(--border);border-radius:7px;padding:8px 12px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:14px;outline:none;transition:border-color .2s}
+.cf-inp:focus{border-color:var(--gold)}
+.notice-banner{background:rgba(255,61,87,.1);border:1px solid rgba(255,61,87,.3);border-radius:8px;padding:12px;font-size:13px;color:var(--red);margin-bottom:14px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginView">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="lc-title">🔐 ADMIN</div>
+      <div class="lc-sub">LuckyBet Ethiopia — Staff Only</div>
+      <input class="inp" type="text" id="adminUser" placeholder="Admin Username"/>
+      <input class="inp" type="password" id="adminPass" placeholder="Admin Password"/>
+      <button class="btn btn-red" onclick="doAdminLogin()">Login →</button>
+      <p style="font-size:11px;color:var(--muted);margin-top:10px">⚠️ This panel is for authorized staff only. All actions are logged.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminView" style="display:none">
+  <div class="admin-nav">
+    <div class="admin-logo">Lucky<span>Bet</span> ADMIN</div>
+    <div class="admin-user" id="adminUserDisplay"></div>
+    <button class="btn btn-outline" style="font-size:12px;padding:6px 12px" onclick="adminLogout()">Logout</button>
+  </div>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sb-item active" onclick="showAdminPage('deposits',this)">💳 Deposits</div>
+      <div class="sb-item" onclick="showAdminPage('users',this)">👥 Users</div>
+      <div class="sb-item" onclick="showAdminPage('credit',this)">💰 Credit Wallet</div>
+      <div class="sb-item" onclick="showAdminPage('stats',this)">📊 Stats</div>
+    </aside>
+    <main class="main">
+
+      <!-- DEPOSITS PAGE -->
+      <div class="page active" id="ap-deposits">
+        <div class="section-title">Pending Deposit Requests</div>
+        <div class="notice-banner">⚠️ Verify each screenshot manually before approving. Fraudulent deposits should be rejected and user flagged.</div>
+        <div class="dep-table">
+          <div class="dt-header"><span>Date</span><span>User</span><span>Phone</span><span>Amount</span><span>Method</span><span>Ref #</span><span>Action</span></div>
+          <div id="depList"></div>
+        </div>
+        <div class="section-title" style="margin-top:20px">Approved Deposits</div>
+        <div class="dep-table">
+          <div class="dt-header"><span>Date</span><span>User</span><span>Phone</span><span>Amount</span><span>Method</span><span>Ref #</span><span>Status</span></div>
+          <div id="approvedList"></div>
+        </div>
+      </div>
+
+      <!-- USERS PAGE -->
+      <div class="page" id="ap-users">
+        <div class="section-title">Registered Users</div>
+        <div class="users-table">
+          <div class="ut-header"><span>ID</span><span>Name</span><span>Phone</span><span>Balance (ETB)</span><span>Joined</span></div>
+          <div id="userList"></div>
+        </div>
+      </div>
+
+      <!-- CREDIT PAGE -->
+      <div class="page" id="ap-credit">
+        <div class="section-title">Manually Credit Wallet</div>
+        <div class="credit-form">
+          <div class="cf-group"><label class="cf-lbl">User ID or Phone</label><input class="cf-inp" type="text" id="creditUser" placeholder="User ID or phone"/></div>
+          <div class="cf-group"><label class="cf-lbl">Amount (ETB)</label><input class="cf-inp" type="number" id="creditAmt" placeholder="Amount" min="1"/></div>
+          <div class="cf-group"><label class="cf-lbl">Note</label><input class="cf-inp" type="text" id="creditNote" placeholder="Deposit ref / reason"/></div>
+          <button class="btn btn-green" onclick="creditUser()">Credit Wallet</button>
+        </div>
+        <div id="creditMsg" style="font-size:14px;color:var(--green);font-weight:700"></div>
+      </div>
+
+      <!-- STATS PAGE -->
+      <div class="page" id="ap-stats">
+        <div class="section-title">Platform Statistics</div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="sc-val" id="statTotalUsers" style="color:var(--cyan)">0</div><div class="sc-lbl">Total Users</div></div>
+          <div class="stat-card"><div class="sc-val" id="statPending" style="color:var(--gold)">0</div><div class="sc-lbl">Pending Deposits</div></div>
+          <div class="stat-card"><div class="sc-val" id="statApproved" style="color:var(--green)">0 ETB</div><div class="sc-lbl">Total Approved</div></div>
+          <div class="stat-card"><div class="sc-val" id="statWallets" style="color:var(--purple)">0 ETB</div><div class="sc-lbl">Total Wallets</div></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+// ── Admin credentials (change these!) ──
+const ADMIN_CREDENTIALS=[
+  {user:'admin',passHash:hashStr('admin@luckybet2025')},
+  {user:'manager',passHash:hashStr('manager@2025')}
+];
+
+let currentAdmin=null;
+
+function hashStr(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;}return h.toString(16);}
+
+function doAdminLogin(){
+  const u=document.getElementById('adminUser').value.trim();
+  const p=document.getElementById('adminPass').value;
+  const match=ADMIN_CREDENTIALS.find(c=>c.user===u&&c.passHash===hashStr(p));
+  if(!match){alert('❌ Invalid credentials');return;}
+  currentAdmin=u;
+  document.getElementById('loginView').style.display='none';
+  document.getElementById('adminView').style.display='block';
+  document.getElementById('adminUserDisplay').textContent='👤 '+u;
+  loadAll();
+}
+
+function adminLogout(){
+  currentAdmin=null;
+  document.getElementById('loginView').style.display='block';
+  document.getElementById('adminView').style.display='none';
+}
+
+function showAdminPage(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('ap-'+id).classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  loadAll();
+}
+
+function loadAll(){
+  loadDeposits();
+  loadUsers();
+  loadStats();
+}
+
+function loadDeposits(){
+  const deps=JSON.parse(localStorage.getItem('lb_pending_deps')||'[]');
+  const pending=deps.filter(d=>d.status==='pending');
+  const approved=deps.filter(d=>d.status==='approved');
+
+  document.getElementById('depList').innerHTML=pending.length?pending.map((d,i)=>`
+    <div class="dt-row">
+      <span>${new Date(d.date).toLocaleDateString()}</span>
+      <span>${d.name}</span>
+      <span>${d.phone}</span>
+      <span style="color:var(--gold);font-weight:700">${d.amount} ETB</span>
+      <span>${d.method}</span>
+      <span style="font-size:11px;color:var(--cyan)">${d.ref}</span>
+      <div class="action-btns">
+        <button class="ab ab-approve" onclick="approveDeposit('${d.ref}')">✓ Approve</button>
+        <button class="ab ab-reject" onclick="rejectDeposit('${d.ref}')">✕ Reject</button>
+      </div>
+    </div>`).join(''):'<div style="padding:16px;text-align:center;color:var(--muted);font-size:13px">No pending deposits</div>';
+
+  document.getElementById('approvedList').innerHTML=approved.length?approved.map(d=>`
+    <div class="dt-row">
+      <span>${new Date(d.date).toLocaleDateString()}</span>
+      <span>${d.name}</span>
+      <span>${d.phone}</span>
+      <span style="color:var(--green);font-weight:700">${d.amount} ETB</span>
+      <span>${d.method}</span>
+      <span style="font-size:11px">${d.ref}</span>
+      <span class="badge badge-approved">✅ Approved</span>
+    </div>`).join(''):'<div style="padding:16px;text-align:center;color:var(--muted);font-size:13px">No approved deposits yet</div>';
+}
+
+function approveDeposit(ref){
+  const deps=JSON.parse(localStorage.getItem('lb_pending_deps')||'[]');
+  const dep=deps.find(d=>d.ref===ref);
+  if(!dep){alert('Not found');return;}
+  dep.status='approved';
+  dep.approvedBy=currentAdmin;
+  dep.approvedAt=new Date().toISOString();
+  localStorage.setItem('lb_pending_deps',JSON.stringify(deps));
+  // Credit the user's balance
+  const users=JSON.parse(localStorage.getItem('lb_users')||'[]');
+  const user=users.find(u=>u.phone===dep.phone||u.id===dep.userId);
+  if(user){
+    const key='lb_bal_'+user.id;
+    const cur=parseFloat(localStorage.getItem(key)||'0');
+    localStorage.setItem(key,(cur+dep.amount).toFixed(2));
+    const depKey='lb_dep_'+user.id;
+    const curDep=parseFloat(localStorage.getItem(depKey)||'0');
+    localStorage.setItem(depKey,(curDep+dep.amount).toFixed(2));
+    alert('✅ Approved! '+dep.amount+' ETB credited to '+user.name+' ('+user.phone+')');
+  } else {
+    alert('⚠️ User not found by phone '+dep.phone+'. Balance NOT credited. Credit manually.');
+  }
+  loadAll();
+}
+
+function rejectDeposit(ref){
+  if(!confirm('Reject this deposit request?'))return;
+  const deps=JSON.parse(localStorage.getItem('lb_pending_deps')||'[]');
+  const dep=deps.find(d=>d.ref===ref);
+  if(dep){dep.status='rejected';dep.rejectedBy=currentAdmin;}
+  localStorage.setItem('lb_pending_deps',JSON.stringify(deps));
+  loadAll();
+}
+
+function loadUsers(){
+  const users=JSON.parse(localStorage.getItem('lb_users')||'[]');
+  document.getElementById('userList').innerHTML=users.length?users.map(u=>`
+    <div class="ut-row">
+      <span style="font-size:11px;color:var(--muted)">${u.id}</span>
+      <span style="font-weight:600">${u.name}</span>
+      <span>${u.phone}</span>
+      <span style="color:var(--green);font-weight:700">${parseFloat(localStorage.getItem('lb_bal_'+u.id)||'0').toFixed(2)}</span>
+      <span style="font-size:12px;color:var(--muted)">${u.joined||'–'}</span>
+    </div>`).join(''):'<div style="padding:16px;text-align:center;color:var(--muted);font-size:13px">No users registered yet</div>';
+}
+
+function creditUser(){
+  const search=document.getElementById('creditUser').value.trim();
+  const amt=parseFloat(document.getElementById('creditAmt').value);
+  const note=document.getElementById('creditNote').value.trim();
+  if(!search||!amt){document.getElementById('creditMsg').textContent='⚠️ Fill all fields';document.getElementById('creditMsg').style.color='var(--red)';return;}
+  const users=JSON.parse(localStorage.getItem('lb_users')||'[]');
+  const user=users.find(u=>u.phone===search||u.id===search);
+  if(!user){document.getElementById('creditMsg').textContent='⚠️ User not found';document.getElementById('creditMsg').style.color='var(--red)';return;}
+  const key='lb_bal_'+user.id;
+  const cur=parseFloat(localStorage.getItem(key)||'0');
+  localStorage.setItem(key,(cur+amt).toFixed(2));
+  document.getElementById('creditMsg').textContent='✅ Credited '+amt+' ETB to '+user.name;
+  document.getElementById('creditMsg').style.color='var(--green)';
+  document.getElementById('creditUser').value='';
+  document.getElementById('creditAmt').value='';
+  document.getElementById('creditNote').value='';
+  loadAll();
+}
+
+function loadStats(){
+  const users=JSON.parse(localStorage.getItem('lb_users')||'[]');
+  const deps=JSON.parse(localStorage.getItem('lb_pending_deps')||'[]');
+  const pending=deps.filter(d=>d.status==='pending').length;
+  const approved=deps.filter(d=>d.status==='approved').reduce((a,d)=>a+d.amount,0);
+  const totalWallets=users.reduce((a,u)=>a+parseFloat(localStorage.getItem('lb_bal_'+u.id)||'0'),0);
+  document.getElementById('statTotalUsers').textContent=users.length;
+  document.getElementById('statPending').textContent=pending;
+  document.getElementById('statApproved').textContent=approved.toFixed(2)+' ETB';
+  document.getElementById('statWallets').textContent=totalWallets.toFixed(2)+' ETB';
+}
+</script>
+</body>
+</html>

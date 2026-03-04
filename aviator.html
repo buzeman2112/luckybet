@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Aviator – LuckyBet Ethiopia</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700;800;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#06080f;--bg2:#0b0f1a;--card:#111827;--border:#1a2540;--gold:#f5a623;--green:#00e676;--red:#ff3d57;--cyan:#00e5ff;--text:#e8edf5;--muted:#5a6a8a;--accent:#141f35}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px}
+h1{font-family:'Exo 2',sans-serif;font-size:26px;font-weight:900;margin-bottom:4px;background:linear-gradient(90deg,var(--gold),#ffd166);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.back{color:var(--muted);font-size:13px;cursor:pointer;margin-bottom:12px;align-self:flex-start}
+.back:hover{color:var(--gold)}
+.game-wrap{width:100%;max-width:700px}
+.canvas-wrap{position:relative;background:linear-gradient(180deg,#0a1628,#0d1e35);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px}
+canvas{display:block;width:100%;height:260px}
+.mult-display{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Exo 2',sans-serif;font-size:64px;font-weight:900;text-shadow:0 0 40px currentColor;pointer-events:none;transition:color .2s}
+.mult-display.flying{color:var(--cyan)}
+.mult-display.crashed{color:var(--red)}
+.mult-display.waiting{color:var(--muted);font-size:24px}
+.plane{position:absolute;font-size:40px;transition:left .05s linear,bottom .05s linear;pointer-events:none;filter:drop-shadow(0 0 12px var(--cyan))}
+.history-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.hist-pill{padding:4px 10px;border-radius:20px;font-family:'Exo 2',sans-serif;font-size:12px;font-weight:800;border:1px solid}
+.hist-pill.low{background:rgba(255,61,87,.15);border-color:rgba(255,61,87,.4);color:var(--red)}
+.hist-pill.mid{background:rgba(0,229,255,.1);border-color:rgba(0,229,255,.3);color:var(--cyan)}
+.hist-pill.high{background:rgba(0,230,118,.1);border-color:rgba(0,230,118,.3);color:var(--green)}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.ctrl-panel{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px}
+.ctrl-title{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px}
+.inp{width:100%;background:var(--accent);border:1px solid var(--border);border-radius:7px;padding:9px 12px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;outline:none;margin-bottom:8px;transition:border-color .2s}
+.inp:focus{border-color:var(--gold)}
+.qs-row{display:flex;gap:4px;margin-bottom:10px}
+.qs{flex:1;padding:5px;background:var(--accent);border:1px solid var(--border);border-radius:5px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;text-align:center;transition:all .15s}
+.qs:hover{color:var(--gold);border-color:var(--gold)}
+.bet-btn{width:100%;padding:12px;border:none;border-radius:8px;font-family:'Exo 2',sans-serif;font-size:16px;font-weight:900;cursor:pointer;transition:all .2s;text-transform:uppercase}
+.bet-btn.place{background:linear-gradient(135deg,var(--gold),#d4891a);color:#000}
+.bet-btn.place:hover{filter:brightness(1.1)}
+.bet-btn.cashout{background:linear-gradient(135deg,var(--green),#00b04f);color:#000}
+.bet-btn.cashout:hover{filter:brightness(1.1)}
+.bet-btn:disabled{opacity:.4;cursor:not-allowed}
+.info-row{display:flex;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:14px}
+.ir-item{text-align:center}
+.ir-lbl{font-size:11px;color:var(--muted)}
+.ir-val{font-family:'Exo 2',sans-serif;font-size:18px;font-weight:900}
+.status-bar{text-align:center;padding:8px;border-radius:7px;font-family:'Exo 2',sans-serif;font-weight:800;font-size:15px;margin-bottom:14px;transition:all .3s}
+.status-bar.waiting{background:rgba(90,106,138,.15);color:var(--muted)}
+.status-bar.flying{background:rgba(0,229,255,.1);color:var(--cyan)}
+.status-bar.crashed{background:rgba(255,61,87,.15);color:var(--red)}
+.live-bets{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px}
+.lb-title{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:10px}
+.lb-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+.lb-row:last-child{border:none}
+.lb-name{color:var(--muted)}
+.lb-stake{color:var(--gold);font-weight:700}
+.lb-mult{font-weight:700}
+</style>
+</head>
+<body>
+<div class="back" onclick="window.close()">← Back to LuckyBet</div>
+<div class="game-wrap">
+  <h1>✈️ AVIATOR</h1>
+  <div style="color:var(--muted);font-size:13px;margin-bottom:12px">Cash out before the plane flies away!</div>
+
+  <!-- History -->
+  <div class="history-row" id="histRow"></div>
+
+  <!-- Canvas -->
+  <div class="canvas-wrap" style="position:relative">
+    <canvas id="gameCanvas" width="700" height="260"></canvas>
+    <div class="mult-display waiting" id="multDisplay">Waiting...</div>
+    <div class="plane" id="plane" style="left:10%;bottom:10%">✈️</div>
+  </div>
+
+  <!-- Status -->
+  <div class="status-bar waiting" id="statusBar">⏳ Waiting for next round...</div>
+
+  <!-- Info row -->
+  <div class="info-row">
+    <div class="ir-item"><div class="ir-lbl">Balance</div><div class="ir-val" id="balVal" style="color:var(--green)">0 ETB</div></div>
+    <div class="ir-item"><div class="ir-lbl">Current Mult</div><div class="ir-val" id="curMult" style="color:var(--cyan)">1.00x</div></div>
+    <div class="ir-item"><div class="ir-lbl">Potential Win</div><div class="ir-val" id="potWin" style="color:var(--gold)">0 ETB</div></div>
+    <div class="ir-item"><div class="ir-lbl">Last Crash</div><div class="ir-val" id="lastCrash" style="color:var(--red)">–</div></div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="ctrl-panel">
+      <div class="ctrl-title">Bet 1</div>
+      <div class="qs-row">
+        <div class="qs" onclick="setB1(10)">10</div>
+        <div class="qs" onclick="setB1(20)">20</div>
+        <div class="qs" onclick="setB1(50)">50</div>
+        <div class="qs" onclick="setB1(100)">100</div>
+      </div>
+      <input class="inp" type="number" id="bet1Inp" value="10" min="1" placeholder="Stake (ETB)" oninput="updatePot()"/>
+      <div style="display:flex;gap:6px;margin-bottom:8px">
+        <div style="flex:1;font-size:12px;color:var(--muted)">Auto Cashout:</div>
+        <input class="inp" type="number" id="auto1" value="2.00" step="0.1" min="1.1" style="flex:1;margin:0;padding:5px 8px;font-size:12px"/>
+        <span style="font-size:12px;color:var(--muted);align-self:center">x</span>
+      </div>
+      <button class="bet-btn place" id="placeBet1" onclick="placeBet(1)">Place Bet</button>
+    </div>
+    <div class="ctrl-panel">
+      <div class="ctrl-title">Bet 2 (Optional)</div>
+      <div class="qs-row">
+        <div class="qs" onclick="setB2(10)">10</div>
+        <div class="qs" onclick="setB2(20)">20</div>
+        <div class="qs" onclick="setB2(50)">50</div>
+        <div class="qs" onclick="setB2(100)">100</div>
+      </div>
+      <input class="inp" type="number" id="bet2Inp" value="10" min="1" placeholder="Stake (ETB)" oninput="updatePot()"/>
+      <div style="display:flex;gap:6px;margin-bottom:8px">
+        <div style="flex:1;font-size:12px;color:var(--muted)">Auto Cashout:</div>
+        <input class="inp" type="number" id="auto2" value="5.00" step="0.1" min="1.1" style="flex:1;margin:0;padding:5px 8px;font-size:12px"/>
+        <span style="font-size:12px;color:var(--muted);align-self:center">x</span>
+      </div>
+      <button class="bet-btn place" id="placeBet2" onclick="placeBet(2)">Place Bet</button>
+    </div>
+  </div>
+
+  <!-- Live Bets -->
+  <div class="live-bets">
+    <div class="lb-title">🎰 Live Players</div>
+    <div id="liveBetsList"></div>
+  </div>
+</div>
+
+<script>
+// ── State ──
+const params=new URLSearchParams(location.search);
+let balance=parseFloat(params.get('bal')||'1000');
+let bets={1:{placed:false,amount:0,cashedOut:false},2:{placed:false,amount:0,cashedOut:false}};
+let phase='waiting'; // waiting | flying | crashed
+let multiplier=1.00;
+let crashAt=1.00;
+let roundTimer=null;
+let flyInterval=null;
+let countdown=5;
+let history=[];
+const canvas=document.getElementById('gameCanvas');
+const ctx=canvas.getContext('2d');
+canvas.width=700;canvas.height=260;
+
+// Fake live players
+const NAMES=['Biruk','Selam','Dawit','Marta','Yonas','Tigist','Abel','Sara','Haile','Liya'];
+let livePlayers=[];
+
+function genCrash(){
+  // House edge: crash point weighted toward low values
+  const r=Math.random();
+  if(r<0.35)return+(1+Math.random()*0.5).toFixed(2);
+  if(r<0.65)return+(1.5+Math.random()*1.5).toFixed(2);
+  if(r<0.85)return+(3+Math.random()*5).toFixed(2);
+  return+(8+Math.random()*20).toFixed(2);
+}
+
+function genLivePlayers(){
+  livePlayers=NAMES.slice(0,6+Math.floor(Math.random()*4)).map(n=>({
+    name:n,stake:Math.floor(Math.random()*200)+10,
+    autoCO:(1.5+Math.random()*8).toFixed(2),cashedOut:false,mult:null
+  }));
+  renderLive();
+}
+
+function renderLive(){
+  document.getElementById('liveBetsList').innerHTML=livePlayers.map(p=>`
+    <div class="lb-row">
+      <span class="lb-name">${p.name}</span>
+      <span class="lb-stake">${p.stake} ETB</span>
+      <span class="lb-mult" style="color:${p.cashedOut?'var(--green)':multiplier>1?'var(--cyan)':'var(--muted)'}">${p.cashedOut?'✅ '+p.mult+'x':phase==='flying'?multiplier.toFixed(2)+'x':'–'}</span>
+    </div>`).join('');
+}
+
+// ── Canvas drawing ──
+let graphPoints=[];
+function drawGraph(){
+  ctx.clearRect(0,0,700,260);
+  // Grid
+  ctx.strokeStyle='rgba(30,45,65,.5)';ctx.lineWidth=1;
+  for(let x=0;x<700;x+=70){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,260);ctx.stroke();}
+  for(let y=0;y<260;y+=52){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(700,y);ctx.stroke();}
+  if(graphPoints.length<2)return;
+  // Line
+  ctx.beginPath();
+  ctx.moveTo(graphPoints[0].x,graphPoints[0].y);
+  graphPoints.forEach(p=>ctx.lineTo(p.x,p.y));
+  ctx.strokeStyle=phase==='crashed'?'#ff3d57':'#00e5ff';
+  ctx.lineWidth=3;ctx.stroke();
+  // Fill
+  ctx.lineTo(graphPoints[graphPoints.length-1].x,260);
+  ctx.lineTo(graphPoints[0].x,260);
+  ctx.closePath();
+  ctx.fillStyle=phase==='crashed'?'rgba(255,61,87,.08)':'rgba(0,229,255,.06)';
+  ctx.fill();
+}
+
+// ── Game loop ──
+function startWaiting(){
+  phase='waiting';multiplier=1.00;graphPoints=[];
+  bets={1:{placed:false,amount:0,cashedOut:false},2:{placed:false,amount:0,cashedOut:false}};
+  crashAt=genCrash();countdown=5;
+  document.getElementById('plane').style.display='block';
+  document.getElementById('plane').style.left='8%';
+  document.getElementById('plane').style.bottom='8%';
+  setMultDisplay('waiting','Waiting...');
+  setStatus('waiting','⏳ Next round in: 5s');
+  setBtn(1,'place');setBtn(2,'place');
+  genLivePlayers();drawGraph();
+  roundTimer=setInterval(()=>{
+    countdown--;
+    setStatus('waiting','⏳ Next round in: '+countdown+'s');
+    if(countdown<=0){clearInterval(roundTimer);startFlight();}
+  },1000);
+}
+
+function startFlight(){
+  phase='flying';multiplier=1.00;
+  const start=Date.now();
+  const w=canvas.width,h=canvas.height;
+  setStatus('flying','✈️ FLYING!');
+  setMultDisplay('flying','1.00x');
+  flyInterval=setInterval(()=>{
+    const elapsed=(Date.now()-start)/1000;
+    multiplier=parseFloat((1+elapsed*0.3+elapsed*elapsed*0.05).toFixed(2));
+    const progress=Math.min(elapsed/(crashAt*1.5),1);
+    const px=50+progress*(w-100);
+    const py=h-30-progress*(h-60);
+    graphPoints.push({x:px,y:py});
+    document.getElementById('plane').style.left=(px/w*100)+'%';
+    document.getElementById('plane').style.bottom=((h-py)/h*100)+'%';
+    document.getElementById('multDisplay').textContent=multiplier.toFixed(2)+'x';
+    document.getElementById('curMult').textContent=multiplier.toFixed(2)+'x';
+    updatePot();
+    drawGraph();
+    // Auto cashout bots
+    livePlayers.forEach(p=>{
+      if(!p.cashedOut&&multiplier>=parseFloat(p.autoCO)){p.cashedOut=true;p.mult=multiplier.toFixed(2);}
+    });
+    renderLive();
+    // Player auto cashout
+    [1,2].forEach(n=>{
+      const auto=parseFloat(document.getElementById('auto'+n).value);
+      if(bets[n].placed&&!bets[n].cashedOut&&multiplier>=auto)cashOut(n);
+    });
+    if(multiplier>=crashAt)crash();
+  },80);
+}
+
+function crash(){
+  clearInterval(flyInterval);
+  phase='crashed';
+  history.unshift(crashAt);
+  if(history.length>10)history.pop();
+  document.getElementById('lastCrash').textContent=crashAt.toFixed(2)+'x';
+  setMultDisplay('crashed','💥 '+crashAt.toFixed(2)+'x CRASH!');
+  setStatus('crashed','💥 CRASHED at '+crashAt.toFixed(2)+'x');
+  document.getElementById('plane').style.display='none';
+  // Lose unclicked bets
+  [1,2].forEach(n=>{
+    if(bets[n].placed&&!bets[n].cashedOut){
+      balance-=bets[n].amount;
+      balance=Math.max(0,balance);
+      updateBalDisplay();
+      showMsg('💥 Lost '+bets[n].amount+' ETB',true);
+    }
+  });
+  renderHistory();
+  setTimeout(startWaiting,3000);
+}
+
+function cashOut(n){
+  if(!bets[n].placed||bets[n].cashedOut||phase!=='flying')return;
+  bets[n].cashedOut=true;
+  const win=parseFloat((bets[n].amount*multiplier).toFixed(2));
+  balance+=win;updateBalDisplay();
+  showMsg('💰 Cashed out '+win+' ETB @ '+multiplier.toFixed(2)+'x');
+  setBtn(n,'cashedout');
+}
+
+function placeBet(n){
+  if(phase!=='waiting')return;
+  const amt=parseFloat(document.getElementById('bet'+n+'Inp').value)||0;
+  if(amt<1){showMsg('⚠️ Minimum 1 ETB',true);return;}
+  if(amt>balance){showMsg('⚠️ Insufficient balance',true);return;}
+  bets[n]={placed:true,amount:amt,cashedOut:false};
+  setBtn(n,'cashout');
+  showMsg('✓ Bet '+(n===1?'1':'2')+': '+amt+' ETB placed');
+}
+
+function setBtn(n,state){
+  const btn=document.getElementById('placeBet'+n);
+  if(state==='place'){btn.textContent='Place Bet';btn.className='bet-btn place';btn.disabled=phase==='flying';btn.onclick=()=>placeBet(n);}
+  else if(state==='cashout'){btn.textContent='💰 CASH OUT';btn.className='bet-btn cashout';btn.disabled=false;btn.onclick=()=>cashOut(n);}
+  else{btn.textContent='✅ Cashed Out';btn.className='bet-btn';btn.disabled=true;btn.style.background='var(--accent)';btn.style.color='var(--green)';}
+}
+
+function setMultDisplay(cls,txt){
+  const el=document.getElementById('multDisplay');
+  el.className='mult-display '+cls;el.textContent=txt;
+}
+function setStatus(cls,txt){
+  const el=document.getElementById('statusBar');
+  el.className='status-bar '+cls;el.textContent=txt;
+}
+
+function updatePot(){
+  [1,2].forEach(n=>{
+    if(bets[n].placed&&!bets[n].cashedOut){
+      document.getElementById('potWin').textContent=(bets[n].amount*multiplier).toFixed(2)+' ETB';
+    }
+  });
+  updateBalDisplay();
+}
+function updateBalDisplay(){
+  document.getElementById('balVal').textContent=balance.toFixed(2)+' ETB';
+}
+
+function renderHistory(){
+  document.getElementById('histRow').innerHTML=history.map(v=>{
+    const cls=v<2?'low':v<5?'mid':'high';
+    return`<span class="hist-pill ${cls}">${v.toFixed(2)}x</span>`;
+  }).join('');
+}
+function setB1(v){document.getElementById('bet1Inp').value=v;}
+function setB2(v){document.getElementById('bet2Inp').value=v;}
+
+let msgT=null;
+function showMsg(txt,err=false){
+  const m=document.createElement('div');
+  m.style.cssText=`position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:${err?'#ff3d57':'#00e676'};color:${err?'#fff':'#000'};padding:10px 20px;border-radius:8px;font-weight:700;font-size:14px;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.4)`;
+  m.textContent=txt;document.body.appendChild(m);
+  setTimeout(()=>m.remove(),2500);
+}
+
+updateBalDisplay();
+startWaiting();
+</script>
+</body>
+</html>
